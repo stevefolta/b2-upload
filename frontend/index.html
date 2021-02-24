@@ -4,6 +4,7 @@
 	<title> Upload File </title>
 	<meta charset="utf-8" />
 	<script src="index.js"></script>
+	<link rel="stylesheet" href="index.css">
 </head>
 
 <body>
@@ -12,7 +13,15 @@
 		<input type="file" id="file-input" multiple />
 	</div>
 	<div>
-		<button id="upload-button">Upload</button>
+		<button id="upload-button" disabled>Upload</button>
+	</div>
+	<progress id="upload-progress" max="100" hidden> 0% </progress>
+	<div id="which-file" hidden>
+		<span> Uploading: </span> <span id="uploading-file"></span>
+	</div>
+	<div id="error-message" hidden> </div>
+	<div id="uploaded-files" hidden>
+		<div id="uploaded-files-label"> Uploaded files: </div>
 	</div>
 </body>
 
