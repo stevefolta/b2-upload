@@ -31,14 +31,21 @@ function hashString(digest) {
 	}
 
 async function uploadClicked() {
-	const uploadDetails = await getUploadDetails();
+	// When testing on localhost, we could just do one getUploadDetails() for all
+	// the files.  On a real server, that doesn't work.  Actually, it has nothing
+	// to do with being on a server, it's just that I tested with a small file
+	// first, so it completed before the first one started.  Actually, we're
+	// kicking off simultaneous uploads.  We should serialize them, or (better)
+	// make the UI show that they're simultaneous.
+
 	let file = uploadFileInput.files[0];
 	for (const file of uploadFileInput.files) {
+		showFileUploadStart(file.name);
 		let buffer = await file.arrayBuffer();
 		let digest = await crypto.subtle.digest('SHA-1', buffer);
 		let hash = hashString(digest);
 		console.log(`SHA1: `, hash);
-		showFileUploadStart(file.name);
+		const uploadDetails = await getUploadDetails();
 
 		// Upload the file.
 		let xhr = new XMLHttpRequest();
@@ -76,6 +83,8 @@ function showFileUploadStart(fileName) {
 
 function updateProgress(event) {
 	let progressBar = document.getElementById('upload-progress');
+	progressBar.hidden = false; 	// In case it's showing multiple simultaneous uploads...
+	document.getElementById('which-file').hidden = false; 	// Ditto.
 	if (event.lengthComputable) {
 		let percentage = event.loaded / event.total * 100;
 		progressBar.setAttribute("value", `${percentage}`);
