@@ -1,4 +1,4 @@
-const getUploadDetailsURL = "http://localhost:3000/getUploadDetails";
+var getUploadDetailsURL = "http://localhost:3000/getUploadDetails";
 
 var uploadFileInput = null;
 var uploadFileButton = null;
