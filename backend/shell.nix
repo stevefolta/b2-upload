@@ -1,4 +1,4 @@
-{ pkgs ? import <nixpkgs> {}, nodejs ? pkgs."nodejs-12_x" }:
+{ pkgs ? import <nixpkgs> {}, nodejs ? pkgs."nodejs" }:
 
 pkgs.mkShell {
 	buildInputs = [ nodejs ];
