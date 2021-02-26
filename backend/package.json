@@ -1,5 +1,6 @@
 {
 	"name": "b2-upload-backend",
+	"version": "0.1",
 	"dependencies": {
 		"express": "^4.17.1"
 		}
