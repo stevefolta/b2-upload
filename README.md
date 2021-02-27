@@ -12,13 +12,13 @@ Running the backend
 
 You'll need to install it using `npm install` or `nix-build -A package`.  (There *is* a way to handle that from a Nix derivation, but I'm not gonna explain that here.)
 
-Run it like `node backend.js *options*`.  These `options` arguments are available:
+Run it like `node backend.js <options>`.  These `options` arguments are available:
 
-`b2ApplicationKey: *path*`: path to file containing the B2 application key  
-`b2KeyID: *path*`: path to file containing the B2 key id  
-`port: *port*`: IP port to listen on  
+`b2ApplicationKey: <path>`: path to file containing the B2 application key  
+`b2KeyID: <path>`: path to file containing the B2 key id  
+`port: <port>`: IP port to listen on  
 `addCORSHeader: true`: Adds "Access-Control-Allow-Origin" header  
-`frontendServerURL: *url*`: Contents of the "Access-Control-Allow-Origin" header
+`frontendServerURL: <url>`: Contents of the "Access-Control-Allow-Origin" header
 
 The application key and key ID are separate files to accomodate Docker secrets (not that I've tried that myself).
 
