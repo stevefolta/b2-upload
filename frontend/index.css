@@ -11,3 +11,7 @@ div#uploaded-files {
 	margin-top: 0.75em;
 	}
 
+div#uploaded-files-label {
+	font-weight: bold;
+	}
+
