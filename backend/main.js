@@ -53,14 +53,6 @@ async function getUploadDetailsRoute(request, result, next) {
 		let uploadDetails = await getUploadDetails(authDetails);
 		result.json(uploadDetails);
 		console.log("Returned upload details.");
-/***
-		let fakeUploadDetails = {
-			authToken: "upload-auth-token",
-			uploadUrl: "upload-url"
-			};
-		result.json(fakeUploadDetails);
-		console.log("Returned fake upload details.");
-***/
 		}
 	catch (e) {
 		console.error("Error getting B2 upload details:", e.message);
@@ -78,6 +70,7 @@ async function jsonAPICall(url, options, data) {
 			if (statusCode != 200) {
 				error = new Error(`Request failed: ${statusCode}`);
 				/***
+				// To see more detail of the error reply:
 				console.log(response.statusMessage);
 				response.setEncoding('utf8');
 				response.on('data', (chunk) => { console.log(chunk); });
