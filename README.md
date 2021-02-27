@@ -5,7 +5,7 @@ This is code for a web page to upload files to a Backblaze B2 bucket.  It's base
 
 - Its only dependencies are Node and Express.
 - The backend is a single .js file -- there isn't so much code that it needs to be spread out into separate modules.
-- The frontend shows progress, allows multiple files to be selected and uploaded, and has other small affordances.
+- The frontend shows upload progress, allows multiple files to be selected and uploaded, and has other small affordances.
 
 Prepping the bucket
 -----
@@ -17,7 +17,7 @@ Running the backend
 
 You'll need to install it using `npm install` or `nix-build -A package`.  (There *is* a way to handle that from a Nix derivation, but I'm not gonna explain that here.)
 
-Run it like <code>node backend.js <i>options</i></code>.  These `options` arguments are available:
+Run it like <code>node backend.js <i>arguments</i></code>.  These arguments are available:
 
 <code>b2ApplicationKey: <i>path</i></code>: path to file containing the B2 application key (required)  
 <code>b2KeyID: <i>path</i></code>: path to file containing the B2 key id (required)  
