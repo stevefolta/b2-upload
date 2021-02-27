@@ -9,6 +9,13 @@
 </head>
 
 <body>
+	<template id="progress-indicator">
+		<div>
+			<progress id="upload-progress" max="100"> 0% </progress>
+			<span class="uploading-file-name"> <slot name="file-name"></slot> </span>
+		</div>
+	</template>
+
 	<h1> Upload File </h1>
 	<div>
 		<input type="file" id="file-input" multiple />
@@ -16,10 +23,7 @@
 	<div>
 		<button id="upload-button" disabled>Upload</button>
 	</div>
-	<progress id="upload-progress" max="100" hidden> 0% </progress>
-	<div id="which-file" hidden>
-		<span> Uploading: </span> <span id="uploading-file"></span>
-	</div>
+	<div id="current-uploads"> </div>
 	<div id="error-message" hidden> </div>
 	<div id="uploaded-files" hidden>
 		<div id="uploaded-files-label"> Uploaded files: </div>

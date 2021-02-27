@@ -30,17 +30,34 @@ function hashString(digest) {
 	return hashHex;
 	}
 
-async function uploadClicked() {
-	// When testing on localhost, we could just do one getUploadDetails() for all
-	// the files.  On a real server, that doesn't work.  Actually, it has nothing
-	// to do with being on a server, it's just that I tested with a small file
-	// first, so it completed before the first one started.  Actually, we're
-	// kicking off simultaneous uploads.  We should serialize them, or (better)
-	// make the UI show that they're simultaneous.
+customElements.define(
+	'progress-indicator',
+	class extends HTMLElement {
+		constructor() {
+			super();
+			let template = document.getElementById('progress-indicator').content;
+			this.attachShadow({ mode: 'open' }).appendChild(template.cloneNode(true));
+			this.progressBar = this.shadowRoot.querySelector("#upload-progress");
+			console.log(this.progressBar);
+			}
 
-	let file = uploadFileInput.files[0];
+		set percentage(value) {
+			this.progressBar.setAttribute("value", `${value}`);
+			this.progressBar.textContent = `${value}%`;
+			}
+		});
+
+async function uploadClicked() {
+	document.getElementById('error-message').hidden = true;
+	let uploadsArea = document.getElementById('current-uploads');
+
 	for (const file of uploadFileInput.files) {
-		showFileUploadStart(file.name);
+		let progressIndicator = document.createElement('progress-indicator');
+		let fileNameElement = document.createElement('span');
+		fileNameElement.setAttribute("slot", "file-name");
+		fileNameElement.textContent = file.name;
+		progressIndicator.appendChild(fileNameElement);
+		uploadsArea.appendChild(progressIndicator);
 		let buffer = await file.arrayBuffer();
 		let digest = await crypto.subtle.digest('SHA-1', buffer);
 		let hash = hashString(digest);
@@ -50,14 +67,20 @@ async function uploadClicked() {
 		// Upload the file.
 		let xhr = new XMLHttpRequest();
 		xhr.addEventListener('load', (event) => {
+			uploadsArea.removeChild(progressIndicator);
 			showFileUploadDone(file.name);
 			console.info(`XHR response: ${xhr.response}`);
 			});
-		xhr.upload.addEventListener('progress', updateProgress);
+		xhr.upload.addEventListener('progress', (event) => {
+			if (event.lengthComputable)
+				progressIndicator.percentage = event.loaded / event.total * 100;
+			});
 		xhr.addEventListener('error', () => {
+			uploadsArea.removeChild(progressIndicator);
 			showUploadError(file.name, xhr.response.status);
 			});
 		xhr.upload.addEventListener('error', () => {
+			uploadsArea.removeChild(progressIndicator);
 			showUploadError(file.name, xhr.response.status);
 			});
 		xhr.open("POST", uploadDetails.uploadURL);
@@ -73,36 +96,13 @@ function filesChanged() {
 	uploadFileButton.disabled = (uploadFileInput.files.length == 0);
 	}
 
-function showFileUploadStart(fileName) {
-	let progressBar = document.getElementById('upload-progress');
-	progressBar.hidden = false;
-	document.getElementById('which-file').hidden = false;
-	document.getElementById('uploading-file').textContent = fileName;
-	document.getElementById('error-message').hidden = true;
-	}
-
-function updateProgress(event) {
-	let progressBar = document.getElementById('upload-progress');
-	progressBar.hidden = false; 	// In case it's showing multiple simultaneous uploads...
-	document.getElementById('which-file').hidden = false; 	// Ditto.
-	if (event.lengthComputable) {
-		let percentage = event.loaded / event.total * 100;
-		progressBar.setAttribute("value", `${percentage}`);
-		progressBar.textContent = `${percentage}%`;
-		}
-	else
-		progressBar.removeAttribute("value");
-	}
-
 function showFileUploadDone(fileName) {
-	document.getElementById('upload-progress').hidden = true;
-	document.getElementById('which-file').hidden = true;
 	let fileElement = document.createElement("div");
 	fileElement.setAttribute("class", "uploaded-file");
 	fileElement.textContent = fileName;
 	let uploadedFilesElement = document.getElementById('uploaded-files');
-	uploadedFilesElement.hidden = false;
 	uploadedFilesElement.appendChild(fileElement);
+	uploadedFilesElement.hidden = false;
 	}
 
 function showUploadError(fileName, errorCode) {

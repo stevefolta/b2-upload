@@ -3,6 +3,10 @@ progress {
 	margin-bottom: 0.5em;
 	}
 
+div#current-uploads {
+	margin-top: 0.75em;
+	}
+
 div#uploaded-files {
 	margin-top: 0.75em;
 	}
